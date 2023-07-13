@@ -1,0 +1,119 @@
+/* User Basic */
+
+{
+    "img": "aHR0cHM6Ly9pbWcuZnJlZXBpay5jb20vdmVjdG9yLXByZW1pdW0vcGVyZmlsLWF2YXRhci1ob21icmUtaWNvbm8tcmVkb25kb18yNDY0MC0xNDA0NC5qcGc=",
+    "name":"YWd1c3RpbiBiZW5pdGV6",
+    "username":"YWd1c2Jleg==",
+    "password":"QWd1c3Rpbk1hcmlzYTQ1Xw0K",
+    "email": "YmV6YWd1c0BnbWFpbC5jb20NCg==",
+    "phone": "KyA1NCA5IDI5NzItNTI3Mjc5",
+    "direction":[
+        {
+            "tag": "ZHB0byB1cnF1aXph",
+            "cp": "MTI0Mw0K",
+            "address": "R3JhbC4gVXJxdWl6YQ==",
+            "number": "MTYyNA==",
+            "location": "Y2FwaXRhbCBmZWRlcmFs",
+            "province": "YnVlbm9zIGFpcmVz",
+            "country": "YXJnZW50aW5h"
+        },
+        {
+            "tag": "ZHB0byBzbWE=",
+            "cp": "ODM3MA==",
+            "address": "YXYuIFNhbiBtYXJ0aW4NCg==",
+            "number": "Nzc1",
+            "location": "c2FuIG1hcnRpbiBkZSBsb3MgYW5kZXM=",
+            "province": "bmV1cXVlbg0K",
+            "country": "YXJnZW50aW5h"
+        }
+    ],
+    "payments":[
+        {
+            "card": ["MTIzNDU2Nzg5MTIzNDU2Nzg5","Nzg5"],
+            "holderName": "YWd1c3RpbiBiZW5pdGV6",
+            "cvv": "ODM3"
+        }
+    ]
+},{
+    "img": "aHR0cHM6Ly9pbWcuZnJlZXBpay5jb20vdmVjdG9yLWdyYXRpcy9hdmF0YXItcGVyc29uYWplLWVtcHJlc2FyaW8tYWlzbGFkb18yNDg3Ny02MDExMS5qcGc=",
+    "name":"TWFudWVsIHR1cml6bw==",
+    "username":"YmV6YWd1cw==",
+    "password":"QWd1c3Rpbk1hcmlzYTQ1Xw0K",
+    "email": "YWd1c3RpbmRhdmlkYmVuaXRlejFAZ21haWwuY29t",
+    "phone": "KzU0IDkgMjk0NCAxMzgyNDg=",
+    "direction":[
+        {
+            "tag": "ZHB0byB1cnF1aXph",
+            "cp": "MTI0Mw0K",
+            "address": "R3JhbC4gVXJxdWl6YQ==",
+            "number": "MTYyNA==",
+            "location": "Y2FwaXRhbCBmZWRlcmFs",
+            "province": "YnVlbm9zIGFpcmVz",
+            "country": "YXJnZW50aW5h"
+        },
+        {
+            "tag": "ZHB0byBzbWE=",
+            "cp": "ODM3MA==",
+            "address": "YXYuIFNhbiBtYXJ0aW4NCg==",
+            "number": "Nzc1",
+            "location": "c2FuIG1hcnRpbiBkZSBsb3MgYW5kZXM=",
+            "province": "bmV1cXVlbg0K",
+            "country": "YXJnZW50aW5h"
+        }
+    ],
+    "payments":[
+        {
+            "card": ["MTIzNDU2Nzg5MTIzNDU2Nzg5","Nzg5"],
+            "holderName": "YWd1c3RpbiBiZW5pdGV6",
+            "cvv": "ODM3"
+        }
+    ]
+}
+
+/* User Admin */
+
+{
+    "img":"aHR0cHM6Ly9pbWcuZnJlZXBpay5jb20vdmVjdG9yLWdyYXRpcy9hdmF0YXItcGVyc29uYWplLWVtcHJlc2FyaW8tYWlzbGFkb18yNDg3Ny02MDExMS5qcGc",
+    "name":"anVhbiByaXF1ZWxtZQ==",
+    "username":"cmlxdWVsbWU=",
+    "password":"QWd1c3Rpbk1hcmlzYTQ1Xw0K",
+    "email":"YmV6YWd1c0BnbWFpbC5jb20=",
+    "rol": 1
+},{
+    "img":"aHR0cHM6Ly9pbWcuZnJlZXBpay5jb20vdmVjdG9yLWdyYXRpcy9hdmF0YXItcGVyc29uYWplLWVtcHJlc2FyaW8tYWlzbGFkb18yNDg3Ny02MDExMS5qcGc",
+    "name":"bWFudWVsIHBpcXVlcm8=",
+    "username":"YWRtaW5iZXo=",
+    "password":"QWd1c3Rpbk1hcmlzYTQ1Xw0K",
+    "email":"YWd1c3RpbmJlejA5QGdtYWlsLmNvbQ==",
+    "rol": 1
+}
+
+/* Categories */
+
+{
+    "img": "aHR0cHM6Ly9wcmV2aWV3cy4xMjNyZi5jb20vaW1hZ2VzL3l1cGlyYW1vcy95dXBpcmFtb3MxNzA5L3l1cGlyYW1vczE3MDkxMDUxMi84NTQ5NDQ1MC1jZXN0YS1kZS1jb21wcmFzLWNvbi1ib3RlbGxhcy1kZS1iZWJlci1wcm9kdWN0b3MtaWNvbm8taWx1c3RyYWNpJUMzJUIzbi12ZWN0b3JpYWwuanBn",
+    "name": "Y3VhZGVybm8="
+},{
+    "img": "aHR0cHM6Ly9wcmV2aWV3cy4xMjNyZi5jb20vaW1hZ2VzL3l1cGlyYW1vcy95dXBpcmFtb3MxNzA5L3l1cGlyYW1vczE3MDkxMDUxMi84NTQ5NDQ1MC1jZXN0YS1kZS1jb21wcmFzLWNvbi1ib3RlbGxhcy1kZS1iZWJlci1wcm9kdWN0b3MtaWNvbm8taWx1c3RyYWNpJUMzJUIzbi12ZWN0b3JpYWwuanBn",
+    "name": "bGFwaWNlcmE="
+}
+
+/* Producto */
+
+{
+    "img":"aHR0cHM6Ly9kM3VneWYyaHQ2YWVuaC5jbG91ZGZyb250Lm5ldC9zdG9yZXMvMDAxLzE0NC82NjgvcHJvZHVjdHMvNzY2MzExLWQ5ZDRjYzk4YThkMzJmMzBjMjE1OTE1NjA0NTQwMjMyLTEwMjQtMTAyNC5wbmc=",
+    "name":"cuaderno",
+    "price": 2800,
+    "description": {
+        "title":"buena calidad",
+        "text":"es de buena calidad"
+    }
+},{
+    "img":"aHR0cHM6Ly9kM3VneWYyaHQ2YWVuaC5jbG91ZGZyb250Lm5ldC9zdG9yZXMvMDAxLzE0NC82NjgvcHJvZHVjdHMvNzY2MzExLWQ5ZDRjYzk4YThkMzJmMzBjMjE1OTE1NjA0NTQwMjMyLTEwMjQtMTAyNC5wbmc=",
+    "name":"libro",
+    "price":350,
+    "description": {
+        "title":"buena calidad",
+        "text":"es de buena calidad"
+    }
+}
