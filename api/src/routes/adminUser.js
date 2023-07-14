@@ -2,13 +2,13 @@ const { Router } = require('express')
 const { UserAdmin, User } = require('../db.js');
 const bcrypt = require('bcrypt');
 const { encrypted, decrypted, transporter, verificationAdmin, messageEmail } = require('./middleware/middleware.js');
-const { EMAIL_ADMIN } = process.env
+const { EMAIL_ADMIN, JWT_KEY_ADMIN } = process.env
 
 const app = Router()
 
 // function users Admins
 
-app.get('/', verificationAdmin ,async (req,res)=>{
+app.get('/' ,async (req,res)=>{
     try{
 
         let allUsers = await UserAdmin.findAll();
@@ -24,11 +24,14 @@ app.get('/', verificationAdmin ,async (req,res)=>{
                 name: decrypted(e.name),
                 username: decrypted(e.username),
                 email: decrypted(e.email),
+                rol: e.rol
             }
 
             return structure
 
         })
+
+        return res.status(200).send(allUsers)
 
     }catch(e){
         return res.status(500).send({message: 'unexpected error'})
@@ -55,7 +58,8 @@ app.get('/id/:id', verificationAdmin ,async (req, res)=>{
             id: user.id,
             name: decrypted(user.name),
             username: decrypted(user.username),
-            email: decrypted(user.email)
+            email: decrypted(user.email),
+            rol: user.rol
         }
 
         return res.status(200).send(userStructure)
@@ -68,11 +72,11 @@ app.get('/id/:id', verificationAdmin ,async (req, res)=>{
 
 app.post('/created/admin', async (req, res)=>{
 
-    try{
+    
 
-        const { name, username, password, email } = req.body
+        const { name, username, password, email, emailSup } = req.body
 
-        if( !name || !username || !password || !email ){
+        if( !name || !username || !password || !email || !emailSup){
             return res.status(400).send({message:'required data is missing'})
         }
 
@@ -94,7 +98,6 @@ app.post('/created/admin', async (req, res)=>{
         }
 
         const verification = await UserAdmin.findOne({ where: {
-            username:encrypteUserName,
             email:encrypteEmail 
         }})
     
@@ -102,30 +105,38 @@ app.post('/created/admin', async (req, res)=>{
             return res.status(404).send({message:'existing user'})
         }
 
-        const emailMessage =  messageEmail(`http://localhost:3001/verify/?u=${decrypted(name)}&un=${decrypted(username)}&p=${passwordHash}}&m=${decryptedEmail}`)
+        const emailMessage =  messageEmail(`http://localhost:3001/verify/?u=${name}&un=${username}&p=${passwordHash}}&m=${email}`)
+
+        const emailAdmin = decrypted(emailSup)
+
+
+        if(EMAIL_ADMIN == emailAdmin){
+            return res.status(400).send({message: 'incorrect emial supervir'})
+        }
 
         await transporter.sendMail({
             from: '"Imber Coffe" <imbercoffe@gmail.com>', // sender address
-            to: EMAIL_ADMIN, // list of receivers
+            to: emailAdmin, // list of receivers
             subject: "Imber Coffe", // Subject line
             html: emailMessage 
         });
 
-        return res.status(200).send({message: ''})
+        return res.status(200).send({message: 'succeful created'})
 
-    }catch(e){
-        return res.status(500).send({message: 'unexpected error'})
-    }
 
 });
 
-app.post('/created/admin/verify', verificationAdmin ,async (req, res)=>{
+app.post('/created/admin/verify' ,async (req, res)=>{
+    
     try{
-
         const { name, username, password, email } = req.body
+        const { rol } = req.query
 
         if( !name || !username || !password || !email ){
             return res.status(400).send({message:'required data is missing'})
+        }
+        if(rol && typeof(rol) != 'number'){
+            return res.status(400).send({message:'rol incorrect'})
         }
 
         const encrypteUserName = encrypted(username)
@@ -146,7 +157,6 @@ app.post('/created/admin/verify', verificationAdmin ,async (req, res)=>{
         }
 
         const verification = await UserAdmin.findOne({ where: {
-            username:encrypteUserName,
             email:encrypteEmail 
         }})
     
@@ -154,21 +164,34 @@ app.post('/created/admin/verify', verificationAdmin ,async (req, res)=>{
             return res.status(404).send({message:'existing user'})
         }
 
-        const newUser = {
-            name: encrypted(name),
-            username: encrypteUserName,
-            password:encrypteEmail,
-            emial: encrypteEmail
+        let newUser 
+
+        if(rol){
+            newUser = {
+                name: encrypted(name),
+                username: encrypteUserName,
+                password: passwordHash,
+                email: encrypteEmail,
+                rol: rol
+            }
+        }
+        if(!rol){
+            newUser = {
+                name: encrypted(name),
+                username: encrypteUserName,
+                password: passwordHash,
+                email: encrypteEmail
+            }
         }
 
-        await UserAdmin.created(newUser)
+        await UserAdmin.create(newUser)
 
-        res.status(200).send({ message: 'user created sucessfully'})
-
+        return res.status(200).send({ message: 'user created sucessfully'})
 
     }catch(e){
         return res.status(500).send({message: 'unexpected error'})
     }
+    
 })
 
 app.put('/update/info/:id', verificationAdmin ,async (req, res)=>{
@@ -236,6 +259,16 @@ app.put('/update/img/:id', verificationAdmin ,async (req, res)=>{
         const { id } = req.params
         const { img } = req.query
 
+        if(!id){
+            return res.status(400).send({message: 'no required data found'})
+        }
+
+        const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
+
+        if(!uuidRegex.test(id)){
+            return res.status(400).send({message: 'id invalid'})
+        }
+
         const imgRegex = /^(http[s]?|ftp):\/\/[^\/\.]+?\.[^\/\s]+(\/[^\/\s]*)*$/
 
         if(!imgRegex.test(decrypted(img))){
@@ -280,7 +313,7 @@ app.delete('/delete/user/:id', verificationAdmin, async (req, res)=>{
             return res.status(404).send({message: 'user does not exist'})
         }
 
-        await User.destroy({where: {id: id}})
+        await UserAdmin.destroy({where: {id: id}})
 
         return res.status(200).send({message: 'successful process'})
 
@@ -326,7 +359,13 @@ app.get('/userBasic/id/:id', verificationAdmin, async (req,res)=>{
         const {id} = req.params
 
         if(!id){
-            return res.status(400).send({message:'required data does not exist'})
+            return res.status(400).send({message: 'no required data found'})
+        }
+
+        const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
+
+        if(!uuidRegex.test(id)){
+            return res.status(400).send({message: 'id invalid'})
         }
 
         const user = await User.findOne({where:{id: id}})
@@ -356,7 +395,13 @@ app.put('/userBasic/id/:id', verificationAdmin, async (req,res)=>{
         const {id} = req.params
 
         if(!id){
-            return res.status(400).send({message:'required data does not exist'})
+            return res.status(400).send({message: 'no required data found'})
+        }
+
+        const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
+
+        if(!uuidRegex.test(id)){
+            return res.status(400).send({message: 'id invalid'})
         }
 
         const user = await User.findOne({where:{id: id}})

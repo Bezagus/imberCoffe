@@ -15,11 +15,11 @@ module.exports = (sequelize) => {
       defaultValue: 'YUhSMGNITTZMeTlsYkhCaGFYTmtaV3h2YzJwdmRtVnVaWE11WTI5dEwzZHdMV052Ym5SbGJuUXZkWEJzYjJGa2N5OHlNREUyTHpBM0wyWmhZMlZpYjI5ckxXRjJZWFJoY2kwM05qaDRORGcwTG1wd1p3PT0='
     },
     name: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     username:{
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true
     },
@@ -28,12 +28,9 @@ module.exports = (sequelize) => {
         allowNull: false,
     },
     email:{
-        type: DataTypes.STRING(64),
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-            is: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        }
     },
     rol:{
       type: DataTypes.INTEGER,

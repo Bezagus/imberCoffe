@@ -142,7 +142,7 @@ app.post('/create', async (req,res)=>{
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         const decryptedPassword = decrypted(password)
-        const passwordRegex = /^(?=.*\d)(?=.*[A-Z]).{8,}$/;
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[_])[A-Za-z\d_]{8,}$/;
     
         if(!emailRegex.test(decryptedEmail)){
             return res.status(400).send({message: 'incorrect email'})
@@ -152,7 +152,6 @@ app.post('/create', async (req,res)=>{
         }
     
         const verification = await User.findOne({ where: {
-            username:encrypted(username),
             email:encrypted(email) 
         }})
     

@@ -22,12 +22,16 @@ module.exports = (sequelize) => {
     price:{
         type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true
     },
     description:{
         type: DataTypes.JSON,
         allowNull: true,
         defaultValue:{}
+    },
+    stock: {
+      type:DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
     }
   },{
     timestamps: false,

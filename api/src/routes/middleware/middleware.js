@@ -60,7 +60,7 @@ verification.use((req, res, next)=>{
 
 verificationAdmin.use((req, res, next)=>{
 
-    const token = req.headers['x-access-token'] || req.headers['authorization']
+    let token = req.headers['x-access-token'] || req.headers['authorization']
 
     if(!token){
         return res.status(401).send({message: 'authentication token missing'})
@@ -73,7 +73,7 @@ verificationAdmin.use((req, res, next)=>{
     if(token){
         jwt.verify(token, `${JWT_KEY_ADMIN}`, (error, decoded)=>{
             if(error){
-                return res.status(401).end({message: 'authentication token fail'})
+                return res.status(401).json({message: 'authentication token fail'})
             }
 
             req.decoded = decoded;

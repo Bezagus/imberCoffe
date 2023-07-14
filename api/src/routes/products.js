@@ -7,23 +7,44 @@ const app = Router()
 app.get('/', async (req, res)=>{
     try{
 
-        let allProducts = await Product.findAll()
+        const allProducts = await Product.findAll({
+            order: ["id"],
+            include: {
+              model: Categorie,
+              attributes: [
+                "name",
+                "img"
+              ],
+              through: {
+                attributes: [],
+              },
+            },
+          });
 
         if(allProducts.length == 0){
-            return res.status(404).send({message: 'no categories'})
+            return res.status(404).send({message: 'no products'})
         }
 
-        allProducts = allProducts.map(e=>{
+        const listProductos = allProducts.map(e=>{
+            const categories = e.categories.map(y=>{
+                return {
+                    name: y.name,
+                    img: decrypted(y.img)
+                }
+            })
+
             const structure = {
                 id: e.id,
                 name: e.name,
                 img: decrypted(e.img),
-                description: e.description
+                description: e.description,
+                stock: e.stock,
+                categories: categories
             }
             return structure
         })
 
-        return res.status(200).send(allCategories)
+        return res.status(200).send(listProductos)
 
     }catch(e){
         return res.status(500).send({message: 'unexpected error'})
@@ -55,10 +76,10 @@ app.get('/id/:id',async (req ,res)=>{
             id: verification.id,
             img: decrypted(verification.img),
             name: verification.name,
-            description: description
+            description: description,
         }
 
-        return res.status(200).send(product)
+        return res.status(200).send(verification)
 
     }catch(e){
         return res.status(500).send({message: 'unexpected error'})
@@ -66,7 +87,7 @@ app.get('/id/:id',async (req ,res)=>{
 })
 
 app.post('/created', verificationAdmin ,async (req, res)=>{
-    try{
+    //try{
 
         const { name, img, price, description, categorie} = req.body
 
@@ -98,24 +119,48 @@ app.post('/created', verificationAdmin ,async (req, res)=>{
             return res.status(404).send({message: 'img format invalid'})
         }
 
-        const product = await Product.creted({
+        const product = await Product.create({
             name, 
             img: encrypted(img),
             price,
             description: description? description : {}
         })
 
-        const categories = await Categorie.findAll({where: {name: categorie}})
+        if(Array.isArray(categorie)){
+            categorie.map(async e=>{
 
-        if(categories.length > 0){
-            product.addCategorie(categories)
+                const categories = await Categorie.findOne({where: {name: e}})
+ 
+                if(categories){
+
+                    product.addCategorie(categories)
+                }
+                if(!categories){
+                    const newCategorie = await Categorie.create({name: e})
+        
+                    product.addCategorie(newCategorie)
+                }
+            })
         }
 
-        return res.status(200).send({message:'user created sucessfully'})
+        if(!Array.isArray(categorie)){
+            const categories = await Categorie.findOne({where: {name: categorie}})
 
-    }catch(e){
-        return res.status(500).send({message: 'unexpected error'})
-    }
+            if(categories){
+                product.addCategorie(categories)
+            }
+            if(!categories){
+                const newCategorie = await Categorie.create({name: categorie})
+
+                product.addCategorie(newCategorie)
+            }
+        }
+
+        return res.status(200).send({message:'product created sucessfully'})
+
+    //}catch(e){
+    //    return res.status(500).send({message: 'unexpected error'})
+    //}
 })
 
 app.put('/update/:id', verificationAdmin,async (req , res)=>{

@@ -18,7 +18,7 @@ app.get('/', async (req, res)=>{
         allCategories = allCategories.map(e=>{
             const structure = {
                 id: e.id,
-                name: decrypted(e.name),
+                name: e.name,
                 img: decrypted(e.img),
             }
             return structure
@@ -55,7 +55,7 @@ app.get('/id/:id',async (req ,res)=>{
         const categorie = {
             id: verification.id,
             img: decrypted(verification.img),
-            name: decrypted(verification.name),
+            name: verification.name,
         }
 
         return res.status(200).send(categorie)
@@ -66,7 +66,7 @@ app.get('/id/:id',async (req ,res)=>{
 })
 
 app.post('/created', verificationAdmin ,async (req, res)=>{
-    try{
+    //try{
 
         const { name, img } = req.body
 
@@ -74,11 +74,17 @@ app.post('/created', verificationAdmin ,async (req, res)=>{
             return res.status(400).send({message:'required data does not exist'})
         }
 
+        const verification = await Categorie.findOne({where: {name: name}})
+
+        if(verification){
+            return res.status(404).send({message:'existing categorie'})
+        }
+
         if(!img){
 
-            await Categorie.creted({
-                name: encrypted(name)
-            })
+            const newCategorie = { name: name }
+
+            await Categorie.create(newCategorie)
 
             return res.status(200).send({message:'user created sucessfully'})
 
@@ -90,16 +96,16 @@ app.post('/created', verificationAdmin ,async (req, res)=>{
             return res.status(404).send({message: 'img format invalid'})
         }
 
-        await Categorie.creted({
-            name: encrypted(name),
+        await Categorie.create({
+            name: name,
             img: encrypted(img)
         })
 
         return res.status(200).send({message:'user created sucessfully'})
 
-    }catch(e){
+    /*}catch(e){
         return res.status(500).send({message: 'unexpected error'})
-    }
+    }*/
 })
 
 app.put('/update/:id', verificationAdmin,async (req , res)=>{
@@ -122,7 +128,6 @@ app.put('/update/:id', verificationAdmin,async (req , res)=>{
         }
 
         let imgCategorie = ''
-        let nameCategorie = ''
 
         if(img){
             const imgRegex =/^(http[s]?|ftp):\/\/[^\/\.]+?\.[^\/\s]+(\/[^\/\s]*)*$/
@@ -132,13 +137,9 @@ app.put('/update/:id', verificationAdmin,async (req , res)=>{
             }
         }
 
-        if(name){
-            nameCategorie = decrypted(name)
-        }
-
         await verification.update({
             img: imgCategorie.length > 0 ? imgCategorie : verification.img,
-            name: nameCategorie.length > 0 ? nameCategorie : verification.name
+            name: name ? name : verification.name
         })
 
         return res.status(200).send({message:'updated information'})
